@@ -15,6 +15,10 @@ app.use(express.urlencoded({
 const routeProduct = require('./routes/product.js');
 app.use('/api/product', routeProduct);
 
+// récupération	du nom de la bdd
+const routeBdd = require('./routes/bdd.js');
+app.use('/api', routeBdd);
+
 const routeUser = require('./routes/user.js');
 app.use('/api/user', routeUser);
 

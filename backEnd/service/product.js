@@ -26,7 +26,6 @@ class Product {
         }
     }
 
-
     async insertOne(nom, prix, stock) {
         try {
             await new Promise((resolve, reject) => {
@@ -41,7 +40,6 @@ class Product {
             console.log(error);
         }
     }
-
 
     async deleteById(id) {
         try {
