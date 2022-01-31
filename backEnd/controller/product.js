@@ -6,14 +6,14 @@ const dbService = require('../service/product');
 
 exports.create = (req, res, next) => {
     console.log(req.body);
-    let nom = req.body.nom;
-    console.log(nom);
+    console.log(req.file);
+    let nom = req.body.nom_produit;
     let prix = req.body.prix;
-    console.log(prix);
     let stock = req.body.stock;
-    console.log(stock);
+    let id_TVA = req.body.id_TVA;
+    let id_CATEGORIE = req.body.id_CATEGORIE;
     const db = dbService.getProductInstance();
-    const result = db.insertNewProduit(nom, prix, stock);
+    const result = db.insertOne(nom, prix, stock, id_TVA, id_CATEGORIE);
     result
         .then(() => res.status(200).json({
             message: 'Produit bien créé'

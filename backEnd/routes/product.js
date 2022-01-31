@@ -2,8 +2,14 @@ const product = require('../controller/product.js');
 const express = require('express');
 const router = express.Router();
 
+
+const multer = require('multer');
+const upload = multer({
+    dest: './images'
+})
+
 // create
-router.post('/create', product.create);
+router.post('/create', upload.single('file'), product.create);
 
 // update
 router.put('/update/:id', product.update);
