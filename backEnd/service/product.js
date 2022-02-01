@@ -26,11 +26,11 @@ class Product {
         }
     }
 
-    async insertOne(nom, prix, stock, id_TVA, id_CATEGORIE) {
+    async insertOne(nom, prix, image, stock, id_TVA, id_CATEGORIE) {
         try {
             await new Promise((resolve, reject) => {
-                const query = "INSERT INTO produit (nom_produit, prix, stock, id_TVA, id_CATEGORIE) VALUES (?,?,?,?,?);";
-                connection.query(query, [nom, prix, stock, id_TVA, id_CATEGORIE], (err, result) => {
+                const query = "INSERT INTO produit (image, nom_produit, prix, stock, id_TVA, id_CATEGORIE) VALUES (?,?,?,?,?,?);";
+                connection.query(query, [image, nom, prix, stock, id_TVA, id_CATEGORIE], (err, result) => {
                     if (err) reject(new Error(err.message));
                     resolve();
                 })

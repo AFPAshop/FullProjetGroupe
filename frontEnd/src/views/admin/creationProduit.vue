@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <form class="input creation">
+    <form
+      @submit.prevent="insererProduit"
+      enctype="multipart/form-data"
+      class="input creation"
+    >
       <input
         v-model="nom_produit"
         class="form-control form-control-lg"
@@ -95,8 +99,8 @@
         </select>
       </div>
       <button
-        @click="insererProduit"
         class="inscription btn btn-outline-dark btn-lg px-5"
+        type="submit"
       >
         Création Produit
       </button>
@@ -132,29 +136,34 @@ export default {
     //   this.selectedFile = file;
     //   console.log(this.selectedFile);
     // },
-    // async onUpload() {
-    //   const formData = new FormData();
-    //   formData.append("file", this.selectedFile);
-    //   try {
-    //     await axios.post("http://localhost:5000/upload", formData);
-    //     this.message = "Uploaded!!";
-    //   } catch (err) {
-    //     console.log(err);
-    //     this.message = err.response.data.error;
-    //   }
-    // },
-    insererProduit(even) {
-      even.preventDefault();
+    async insererProduit() {
       const formData = new FormData();
       formData.append("file", this.selectedFile);
-      formData.append("nom_produit", this.nom_produit);
-      formData.append("prix", this.prix);
-      formData.append("stock", this.stock);
+      formData.set("nom_produit", this.nom_produit);
+      formData.set("prix", this.prix);
+      formData.set("stock", this.stock);
+      formData.set("dlc", this.dlc);
+      formData.set("id_TVA", this.id_TVA);
+      formData.set("id_CATEGORIE", this.id_CATEGORIE);
       console.log(formData);
+      try {
+        await axios.post(this.$store.state.url + "/product/create", formData);
+        this.message = "Uploaded!!";
+      } catch (err) {
+        console.log(err);
+        this.message = err.response.data.error;
+      }
+    },
+    insererProduit2(even) {
+      even.preventDefault();
+      // const formData = new FormData();
+      // formData.append("file", this.selectedFile);
+
+      console.log(this.selectedFile);
       axios
         .post(this.$store.state.url + "/product/create", {
           nom_produit: this.nom_produit,
-          file: formData,
+          file: this.selectedFile,
           prix: this.prix,
           stock: this.stock,
           dlc: this.dlc,
