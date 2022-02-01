@@ -11,7 +11,6 @@ class User {
     static getUserInstance() {
         return instance ? instance : new User();
     }
-
     async getAll() {
         try {
             const response = await new Promise((resolve, reject) => {
@@ -26,16 +25,12 @@ class User {
             console.log(error);
         };
     };
-
-    async insertOne(prenom, nom, mdp, mail, tel) {
-        bcrypt.hash(mdp, 10).then((hash) => {
-            console.log(hash);
-            const query = "INSERT INTO utilisateur (prenom, nom_utilisateur, mdp, mail, tel) VALUES (?,?,?,?,?);";
-            connection.query(query, [prenom, nom, hash, mail, tel])
+    async insertOne(firstName, lastName, password, mail, phone) {
+        bcrypt.hash(password, 10).then((hash) => {
+            const query = "INSERT INTO utilisateur (firstName, lastName, password, mail, phone) VALUES (?,?,?,?,?);";
+            connection.query(query, [firstName, lastName, hash, mail, phone])
         }).catch(error => console.log(error))
     };
-
-
     async deleteById(id) {
         try {
             id = parseInt(id, 10);
@@ -54,14 +49,13 @@ class User {
             return false;
         }
     }
-
-    async updateById(id, prenom, nom, mdp, mail, tel) {
+    async updateById(firstName, lastName, password, mail, phone) {
         try {
             id = parseInt(id, 10);
             const response = await new Promise((resolve, reject) => {
-                const query = "UPDATE utilisateur SET prenom=? nom_utilisateur =?, mdp =?, mdp=?, mail=?, tel=? WHERE id = ? ";
+                const query = "UPDATE utilisateur SET (firstName, lastName, password, mail, phone) VALUES (?,?,?,?,?) ";
 
-                connection.query(query, [prenom, nom, mdp, mail, tel, id], (err, result) => {
+                connection.query(query, [firstName, lastName, password, mail, phone], (err, result) => {
                     if (err) reject(new Error(err.message));
                     resolve();
                 })

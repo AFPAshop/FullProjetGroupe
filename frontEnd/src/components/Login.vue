@@ -55,7 +55,7 @@
                           class="form-outline form-white mb-4"
                         >
                           <input
-                            v-model="prenom"
+                            v-model="firstName"
                             type="text"
                             id="typeFirstNameX"
                             class="form-control form-control-lg"
@@ -69,7 +69,7 @@
                           class="form-outline form-white mb-4"
                         >
                           <input
-                            v-model="nom"
+                            v-model="lastName"
                             type="text"
                             id="typeLastNameX"
                             class="form-control form-control-lg"
@@ -81,7 +81,7 @@
                           class="form-outline form-white mb-4"
                         >
                           <input
-                            v-model="tel"
+                            v-model="phone"
                             type="text"
                             id="typeLastNameX"
                             class="form-control form-control-lg"
@@ -93,8 +93,8 @@
 
                         <div class="form-outline form-white mb-4">
                           <input
-                            v-model="email"
-                            type="email"
+                            v-model="mail"
+                            type="mail"
                             id="typeEmailX"
                             class="form-control form-control-lg"
                           />
@@ -228,11 +228,11 @@ export default {
       role: [],
       e: true,
       affiche: "login",
-      email: "",
+      mail: "",
       password: "",
-      nom: "",
-      prenom: "",
-      tel: "",
+      lastName: "",
+      firstName: "",
+      phone: "",
     };
   },
   mounted() {},
@@ -242,14 +242,16 @@ export default {
     // et changement de la classe pour l'icone eye
     changer() {
       if (this.e == true) {
-        document.getElementById("typePasswordX").setAttribute("type", "text");
-        document.getElementById("eye").setAttribute("class", "fa fa-eye-slash");
+        document.gephoneementById("typePasswordX").setAttribute("type", "text");
+        document
+          .gephoneementById("eye")
+          .setAttribute("class", "fa fa-eye-slash");
         this.e = false;
       } else {
         document
-          .getElementById("typePasswordX")
+          .gephoneementById("typePasswordX")
           .setAttribute("type", "password");
-        document.getElementById("eye").setAttribute("class", "fa fa-eye");
+        document.gephoneementById("eye").setAttribute("class", "fa fa-eye");
         this.e = true;
       }
     },
@@ -257,16 +259,18 @@ export default {
     // et changement de la classe pour l'icone eye
     changer2() {
       if (this.e == true) {
-        document.getElementById("typePasswordX2").setAttribute("type", "text");
         document
-          .getElementById("eye2")
+          .gephoneementById("typePasswordX2")
+          .setAttribute("type", "text");
+        document
+          .gephoneementById("eye2")
           .setAttribute("class", "fa fa-eye-slash");
         this.e = false;
       } else {
         document
-          .getElementById("typePasswordX2")
+          .gephoneementById("typePasswordX2")
           .setAttribute("type", "password");
-        document.getElementById("eye2").setAttribute("class", "fa fa-eye");
+        document.gephoneementById("eye2").setAttribute("class", "fa fa-eye");
         this.e = true;
       }
     },
@@ -281,7 +285,7 @@ export default {
     login() {
       axios
         .post(this.$store.state.url + "/auth/login", {
-          email: this.email,
+          mail: this.mail,
           password: this.password,
         })
         .then((res) => {
@@ -297,13 +301,11 @@ export default {
         .post(
           this.$store.state.url + "/user/create",
           {
-            data: {
-              nom: this.nom,
-              prenom: this.prenom,
-              email: this.email,
-              password: this.password,
-              tel: this.tel,
-            },
+            lastName: this.lastName,
+            firstName: this.firstName,
+            mail: this.mail,
+            password: this.password,
+            phone: this.phone,
           },
           {
             header: {},
@@ -315,12 +317,12 @@ export default {
         .catch(function (error) {
           error;
         });
-      this.email = "";
+      this.mail = "";
       this.password = "";
-      this.tel = "";
-      this.prenom = "";
-      this.nom = "";
-      this.tel = "";
+      this.phone = "";
+      this.firstName = "";
+      this.lastName = "";
+      this.phone = "";
       this.affiche = "login";
     },
   },

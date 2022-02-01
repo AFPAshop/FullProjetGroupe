@@ -32,7 +32,7 @@ class Category {
                     id_parent = 0;
                     console.log(id_parent)
                 }
-                const query = "INSERT INTO categorie (nom_categorie, id_parent) VALUES (?,?)";
+                const query = "INSERT INTO categorie (nom, id_parent) VALUES (?,?)";
                 connection.query(query, [nom, id_parent], (err, result) => {
                     if (err) reject(new Error(err.message));
                     resolve();
@@ -66,7 +66,7 @@ class Category {
         try {
             id = parseInt(id, 10);
             const response = await new Promise((resolve, reject) => {
-                const query = "UPDATE categorie SET nom_categorie = ?, id_parent = ? WHERE id =" + id;
+                const query = "UPDATE categorie SET nom = ?, id_parent = ? WHERE id =" + id;
 
                 connection.query(query, [nom, id_parent], (err, result) => {
                     if (err) reject(new Error(err.message));

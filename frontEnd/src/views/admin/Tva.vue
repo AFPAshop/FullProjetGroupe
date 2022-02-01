@@ -4,7 +4,7 @@
     <div class="container">
       <button
         type="button"
-        class="btn btn-success"
+        class="btnTva btn btn-success"
         data-toggle="modal"
         data-target="#createTvaModal"
       >
@@ -172,5 +172,9 @@ td {
   height: 24px;
   padding: 4px;
   vertical-align: middle;
+}
+.btnTva {
+  height: 80px;
+  margin-right: 15px;
 }
 </style>

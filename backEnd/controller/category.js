@@ -6,8 +6,8 @@ const dbService = require('../service/Category');
 
 exports.create = (req, res, next) => {
     // récupération des paramètres envoyés par le frontend via axios    
-    let nom = req.body.data.nom;
-    let id_parent = req.body.data.id_parent;
+    let nom = req.body.nom;
+    let id_parent = req.body.id_parent;
     console.log(req.body);
     const db = dbService.getCategoryInstance();
     const result = db.insertOne(nom, id_parent);
@@ -21,14 +21,14 @@ exports.create = (req, res, next) => {
 exports.update = (req, res, next) => {
     // récupération des paramètres envoyés par le frontend via axios
     let id = req.params.id;
-    let nom = req.body.data.nom;
-    let id_parent = req.body.data.id_parent;
+    let nom = req.body.nom;
+    let id_parent = req.body.id_parent;
     console.log(req.body);
     const db = dbService.getCategoryInstance();
     const result = db.updateById(id, nom, id_parent);
     result
         .then(() => res.status(200).json({
-            message: 'Catégorie mis à jour'
+            message: 'Catégorie mise à jour'
         }))
 
         .catch(err => console.log(err));

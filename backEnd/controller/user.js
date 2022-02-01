@@ -5,20 +5,20 @@ const dbService = require('../service/user');
 
 
 exports.create = (req, res, next) => {
-    // récupération des paramètres envoyés par le frontend via axios
-    let prenom = req.body.data.prenom;
-    let nom = req.body.data.nom;
-    let mdp = req.body.data.password;
-    let mail = req.body.data.email;
-    let tel = req.body.data.tel;
+    // récupération des paramètres envoyés par le frontend pour création
+    let firstName = req.body.firstName;
+    let lastName = req.body.lastName;
+    let password = req.body.password;
+    let mail = req.body.mail;
+    let phone = req.body.phone;
     console.log(req.body);
-    console.log(prenom);
-    console.log(nom);
-    console.log(mdp);
+    console.log(firstName);
+    console.log(lastName);
+    console.log(password);
     console.log(mail);
-    console.log(tel);
+    console.log(phone);
     const db = dbService.getUserInstance();
-    const result = db.insertOne(prenom, nom, mdp, mail, tel);
+    const result = db.insertOne(firstName, lastName, password, mail, phone);
     result
         .then(() => res.status(200).json({
             message: 'Utilisateur bien créé'
@@ -28,32 +28,24 @@ exports.create = (req, res, next) => {
 }
 
 exports.update = (req, res, next) => {
-    // récupération des paramètres envoyés par le frontend via axios
+    // récupération des paramètres envoyés par le frontend pour mise à jour
     let id = req.params.id;
-    let prenom = req.body.prenom;
-    let nom = req.body.nom;
-    let mdp = req.body.mdp;
+    let firstName = req.body.firstName;
+    let lastName = req.body.lastName;
+    let password = req.body.password;
     let mail = req.body.mail;
-    let tel = req.body.tel;
-    console.log(id);
-    console.log(prenom);
-    console.log(nom);
-    console.log(req.body);
-    console.log(mdp);
-    console.log(mail);
-    console.log(tel);
+    let phone = req.body.phone;
     const db = dbService.getUserInstance();
-    const result = db.updateUserById(id, prenom, nom, mdp, mail, tel);
+    const result = db.updateUserById(id, firstName, lastName, password, mail, phone);
     result
         .then(() => res.status(200).json({
             message: 'Utilisateur mis à jour'
         }))
-
         .catch(err => console.log(err));
 }
 
 exports.delete = (req, res, next) => {
-    // récupération des paramètres envoyés par le frontend via axios
+    // récupération des paramètres envoyés par le frontend pour delete
     let id = req.params.id;
     console.log(id);
     const db = dbService.getUserInstance();
@@ -68,6 +60,7 @@ exports.delete = (req, res, next) => {
 
 
 exports.getAll = (req, res, next) => {
+    // envoie de paramètres au frontend
     const db = dbService.getUserInstance();
     const result = db.getAllUser();
     result
@@ -77,7 +70,7 @@ exports.getAll = (req, res, next) => {
 
 
 exports.getOne = (req, res, next) => {
-    // récupération des paramètres envoyés par le frontend via axios
+    // envoie de paramètres au frontend
     let id = req.params.id;
     console.log(id);
     const db = dbService.getUserInstance();

@@ -78,7 +78,7 @@
         >
           <option value="">Select Taux TVA</option>
           <option v-for="t in this.$store.state.tva" :key="t.id" :value="t.id">
-            {{ t.type }} %
+            {{ t.type }}
           </option>
         </select>
         <select
@@ -154,28 +154,9 @@ export default {
         this.message = err.response.data.error;
       }
     },
-    insererProduit2(even) {
-      even.preventDefault();
-      // const formData = new FormData();
-      // formData.append("file", this.selectedFile);
-
-      console.log(this.selectedFile);
-      axios
-        .post(this.$store.state.url + "/product/create", {
-          nom_produit: this.nom_produit,
-          file: this.selectedFile,
-          prix: this.prix,
-          stock: this.stock,
-          dlc: this.dlc,
-          id_TVA: this.id_TVA,
-          id_CATEGORIE: this.id_CATEGORIE,
-        })
-        .then((req) => console.log(req.data))
-        .catch((err) => console.log(err));
-    },
     onFileSelected(event) {
       this.selectedFile = event.target.files[0];
-      console.log(this.selectedFile);
+      console.log(event.target.files[0].name);
       var oFReader = new FileReader();
       oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
       oFReader.onload = function (oFREvent) {

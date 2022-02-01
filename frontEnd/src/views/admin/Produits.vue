@@ -19,39 +19,45 @@
         v-model="searchProduct"
       />
     </div>
-    <table>
-      <tr>
-        <td>Image</td>
-        <td>Id</td>
-        <td>Nom</td>
-        <td>Prix</td>
-      </tr>
-      <tr v-for="p in filterProducts" :key="p.id">
-        <td>
-          <img
-            style="height: 50px; width: 50px"
-            :src="p.image"
-            class="card-img-top img-fluid"
-            :alt="p.title"
-          />
-        </td>
-        <td>{{ p.id }}</td>
-        <td>{{ formatProduct(p.title) }}</td>
-        <td>{{ formatPrice(p.price) }} €</td>
-        <td>
-          <router-link :to="'/products/update/' + p.id">
-            <button class="btn btn-outline-dark btn-lg px-5">Modif</button>
-          </router-link>
-        </td>
-        <td>
-          <button
-            @click="deleteProduct(p.id)"
-            class="btn btn-outline-dark btn-lg px-5"
-          >
-            Suppr.
-          </button>
-        </td>
-      </tr>
+    <table class="table table-hover table-dark">
+      <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">Image</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Prix</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="p in filterProducts" :key="p.id">
+          <td scope="row">{{ p.id }}</td>
+          <td>
+            <img
+              style="height: 50px; width: 50px"
+              :src="p.image"
+              class="card-img-top img-fluid"
+              :alt="p.title"
+            />
+          </td>
+          <td>{{ formatProduct(p.title) }}</td>
+          <td>{{ formatPrice(p.price) }} €</td>
+          <td>
+            <router-link :to="'/products/update/' + p.id">
+              <button class="btn btn-outline-success btn-lg px-5">Modif</button>
+            </router-link>
+          </td>
+          <td>
+            <button
+              @click="deleteProduct(p.id)"
+              class="btn btn-outline-success btn-lg px-5"
+            >
+              Suppr.
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
     <Retour />
   </div>
@@ -108,9 +114,8 @@ export default {
 h1 {
   text-align: center;
   margin: 15px auto;
-  color: rgb(9, 65, 4);
+  color: rgb(10, 4, 65);
   width: 50%;
-  background-color: rgb(92, 81, 238);
 }
 .search {
   width: 40%;

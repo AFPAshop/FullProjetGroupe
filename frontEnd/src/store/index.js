@@ -27,7 +27,7 @@ export default createStore({
     getTvaAction({
       commit
     }) {
-      axios.get('http://localhost:5000/api/tva/getall').then(res => {
+      axios.get(this.state.url + '/tva/getall').then(res => {
         commit('getTva', res.data)
       })
     },

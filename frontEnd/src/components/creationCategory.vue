@@ -63,11 +63,11 @@
                           >
                             <option value="">Select Catégorie Parent</option>
                             <option
-                              v-for="c in evenCategory"
+                              v-for="c in parentCategory"
                               :key="c.id"
                               :value="c.id"
                             >
-                              {{ c.nom_categorie }}
+                              {{ c.nom }}
                             </option>
                           </select>
                           <label class="form-label" for="typeid_parentX"
@@ -110,7 +110,7 @@ export default {
   },
   mounted() {},
   computed: {
-    evenCategory() {
+    parentCategory() {
       return this.$store.state.categories.filter(
         (category) => category.id_parent === 0
       );
@@ -123,10 +123,8 @@ export default {
         .post(
           this.$store.state.url + "/category/create",
           {
-            data: {
-              nom: this.nom,
-              id_parent: this.id_parent,
-            },
+            nom: this.nom,
+            id_parent: this.id_parent,
           },
           {
             header: {},

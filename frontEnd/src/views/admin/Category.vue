@@ -21,17 +21,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="t in this.$store.state.categories" :key="t.id">
-            <th scope="row">{{ t.id }}</th>
-            <td>{{ t.id_parent }}</td>
-            <td>{{ t.nom_categorie }}</td>
+          <tr v-for="c in this.$store.state.categories" :key="c.id">
+            <th scope="row">{{ c.id }}</th>
+            <td>{{ c.id_parent }}</td>
+            <td>{{ c.nom }}</td>
             <td>
-              <button class="btn btn-success" @click="showCategory(t.id)">
+              <button class="btn btn-success" @click="showCategory(c.id)">
                 Modif
               </button>
             </td>
             <td>
-              <button class="btn btn-success" @click="deleteCategory(t.id)">
+              <button class="btn btn-success" @click="deleteCategory(c.id)">
                 Suppr.
               </button>
             </td>
@@ -39,6 +39,7 @@
         </tbody>
       </table>
     </div>
+    <!--container modif categorie -->
     <div class="containerHide" v-if="show == true">
       <div
         class="containerHideInput"
@@ -49,32 +50,40 @@
           <div class="form-outline form-white mb-4">
             <input
               v-on:input="nom = $event.target.value"
-              v-bind:value="t.nom"
+              v-bind:value="c.nom"
               Nom="text"
               id="NomNameX"
               class="form-control form-control-lg"
             />
-            <label class="form-label" for="NomNameX">Nom de la categorie</label>
           </div>
           <div class="form-outline form-white mb-4">
-            <select
-              v-if="(checkIdParent = true)"
-              v-on:input="id_parent = $event.target.value"
-              v-bind:value="t.id_parent"
-              Nom="number"
-              id="NomTauxX"
-              class="form-control form-control-lg"
-            />
-            <label class="form-label" for="NomTauxX"></label>
+            <div v-if="c.id_parent > 0" class="form-outline form-white mb-4">
+              <select
+                v-on:input="id_parent = $event.target.value"
+                v-bind:value="c.id_parent"
+                id="typeid_parentX"
+                class="form-control form-control-lg"
+              >
+                <option value="">Select Catégorie Parent</option>
+                <option
+                  v-for="cat in parentCategory"
+                  :key="cat.id"
+                  :value="cat.id"
+                >
+                  {{ cat.id }} - {{ cat.nom }}
+                </option>
+              </select>
+            </div>
+            <button class="btn btn-success" @click="updateCategory(c.id)">
+              Update
+            </button>
+            <button class="btn btn-success" @click="hideCategory">
+              Retour
+            </button>
           </div>
-          <button class="btn btn-success" @click="updateCategory(t.id)">
-            Update
-          </button>
-          <button class="btn btn-success" @click="hideCategory">Retour</button>
         </div>
       </div>
     </div>
-
     <Category />
     <Retour />
   </div>
@@ -98,28 +107,46 @@ export default {
   mounted() {
     console.log(this.$store.state.categories);
   },
+  computed: {
+    parentCategory() {
+      return this.$store.state.categories.filter(
+        (category) => category.id_parent === 0
+      );
+    },
+  },
   methods: {
     showCategory(id) {
       this.show = true;
       this.id = id;
+      this.$store.state.categories.forEach((category) => {
+        if (id == category.id) {
+          this.nom = category.nom;
+          console.log(this.nom);
+          this.id_parent = category.id_parent;
+          console.log(this.id_parent);
+        }
+      });
     },
     hideCategory() {
       this.show = false;
     },
     updateCategory(id) {
       axios
-        .put(this.$store.state.url + "/categorie/update/" + id, {
-          Nom: this.Nom,
-          taux: this.taux,
+        .put(this.$store.state.url + "/category/update/" + id, {
+          nom: this.nom,
+          id_parent: this.id_parent,
         })
         .then(() => console.log("Catégorie modifié"))
         .then(() => this.$store.dispatch("getCategoriesAction"))
         .catch((err) => console.log(err));
       this.show = false;
+      this.nom = "";
+      this.id_parent = "";
+      this.checkIdParent = false;
     },
     deleteCategory(id) {
       axios
-        .delete(this.$store.state.url + "/categorie/delete/" + id)
+        .delete(this.$store.state.url + "/category/delete/" + id)
         .then(() => console.log("Categorie supprimé"))
         .then(() => this.$store.dispatch("getCategoryAction"))
         .catch((err) => console.log(err));

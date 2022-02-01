@@ -15,7 +15,7 @@ router.delete('/delete/:id', user.delete);
 router.get('/getall', user.getAll);
 
 // search
-router.get('/getone/:nom', user.getOne);
+router.get('/getone/:id', user.getOne);
 
 
 module.exports = router;
