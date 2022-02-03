@@ -3,7 +3,6 @@ dotenv.config();
 
 const dbService = require('../service/Bdd');
 
-
 exports.getName = (req, res, next) => {
     const db = dbService.getBddInstance();
     const result = db.getName();

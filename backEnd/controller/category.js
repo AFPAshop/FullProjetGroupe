@@ -3,6 +3,13 @@ dotenv.config();
 
 const dbService = require('../service/Category');
 
+exports.getAll = (req, res, next) => {
+    const db = dbService.getCategoryInstance();
+    const result = db.getAll();
+    result
+        .then(Categories => res.status(200).json(Categories))
+        .catch(err => console.log(err));
+}
 
 exports.create = (req, res, next) => {
     // récupération des paramètres envoyés par le frontend via axios    
@@ -45,26 +52,5 @@ exports.delete = (req, res, next) => {
             message: 'Catégorie supprimé'
         }))
 
-        .catch(err => console.log(err));
-}
-
-
-exports.getAll = (req, res, next) => {
-    const db = dbService.getCategoryInstance();
-    const result = db.getAll();
-    result
-        .then(Categories => res.status(200).json(Categories))
-        .catch(err => console.log(err));
-}
-
-
-exports.getOne = (req, res, next) => {
-    // récupération des paramètres envoyés par le frontend via axios
-    let id = req.params.id;
-    console.log(id);
-    const db = dbService.getCategoryInstance();
-    const result = db.getOneById(id);
-    result
-        .then(Category => res.status(200).json(Category))
         .catch(err => console.log(err));
 }

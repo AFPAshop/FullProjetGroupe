@@ -148,7 +148,7 @@ export default {
       axios
         .delete(this.$store.state.url + "/category/delete/" + id)
         .then(() => console.log("Categorie supprimé"))
-        .then(() => this.$store.dispatch("getCategoryAction"))
+        .then(() => this.$store.dispatch("getCategoriesAction"))
         .catch((err) => console.log(err));
     },
   },

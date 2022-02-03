@@ -3,13 +3,34 @@ dotenv.config();
 
 const dbService = require('../service/tva');
 
+exports.getAll = (req, res, next) => {
+    // envoie des données au front end 
+    const db = dbService.getTvaInstance();
+    const result = db.getAll();
+    result
+        .then(results => {
+            res.status(200).send(JSON.stringify(results))
+            console.log(results)
+        })
+        .catch(err => console.log(err));
+}
+
+exports.getOne = (req, res, next) => {
+    // envoie des données au front end 
+    let id = req.params.id;
+    console.log(id);
+    const db = dbService.getTvaInstance();
+    const result = db.getOneById(id);
+    result
+        .then(Tva => res.status(200).json(Tva))
+        .catch(err => console.log(err));
+}
+
 exports.create = (req, res, next) => {
     // récupération des paramètres envoyés par le frontend via axios
-    let nom = req.body.data.nom;
-    let taux = req.body.data.taux;
+    let nom = req.body.nom;
+    let taux = req.body.taux;
     console.log(req.body);
-    console.log(nom);
-    console.log(taux);
     const db = dbService.getTvaInstance();
     const result = db.insertOne(nom, taux);
     result
@@ -25,9 +46,6 @@ exports.update = (req, res, next) => {
     let type = req.body.type;
     let taux = req.body.taux;
     console.log(req.body);
-    console.log(id);
-    console.log(type);
-    console.log(taux);
     const db = dbService.getTvaInstance();
     const result = db.updateById(id, type, taux);
     result
@@ -49,29 +67,5 @@ exports.delete = (req, res, next) => {
             message: 'Utilisateur supprimé'
         }))
 
-        .catch(err => console.log(err));
-}
-
-
-exports.getAll = (req, res, next) => {
-    const db = dbService.getTvaInstance();
-    const result = db.getAll();
-    result
-        .then(results => {
-            res.status(200).send(JSON.stringify(results))
-            console.log(results)
-        })
-        .catch(err => console.log(err));
-}
-
-
-exports.getOne = (req, res, next) => {
-    // récupération des paramètres envoyés par le frontend via axios
-    let id = req.params.id;
-    console.log(id);
-    const db = dbService.getTvaInstance();
-    const result = db.getOneById(id);
-    result
-        .then(Tva => res.status(200).json(Tva))
         .catch(err => console.log(err));
 }

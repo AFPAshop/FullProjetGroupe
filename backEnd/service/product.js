@@ -26,11 +26,11 @@ class Product {
         }
     }
 
-    async insertOne(nom, prix, image, stock, id_TVA, id_CATEGORIE) {
+    async insertOne(title, price, image, stock, id_TVA, id_CATEGORIE) {
         try {
             await new Promise((resolve, reject) => {
-                const query = "INSERT INTO produit (image, nom_produit, prix, stock, id_TVA, id_CATEGORIE) VALUES (?,?,?,?,?,?);";
-                connection.query(query, [image, nom, prix, stock, id_TVA, id_CATEGORIE], (err, result) => {
+                const query = "INSERT INTO produit (image, title, price, stock, id_TVA, id_CATEGORIE) VALUES (?,?,?,?,?,?);";
+                connection.query(query, [image, title, price, stock, id_TVA, id_CATEGORIE], (err, result) => {
                     if (err) reject(new Error(err.message));
                     resolve();
                 })
@@ -60,13 +60,13 @@ class Product {
         }
     }
 
-    async updateById(id, nom, prix, stock) {
+    async updateById(id, title, price, image, stock, id_TVA, id_CATEGORIE) {
         try {
             id = parseInt(id, 10);
             const response = await new Promise((resolve, reject) => {
-                const query = "UPDATE produit SET nom_produit =?, prix =?, stock=? WHERE id = ? ";
+                const query = "UPDATE produit SET title =?, price =?, image=?, stock=?, id_TVA=?, id_CATEGORIE WHERE id = ? ";
 
-                connection.query(query, [nom, prix, stock, id], (err, result) => {
+                connection.query(query, [title, price, image, stock, id_TVA, id_CATEGORIE, id], (err, result) => {
                     if (err) reject(new Error(err.message));
                     resolve();
                 })

@@ -1,21 +1,18 @@
-const role =  require('../controller/role.js');
-const express =  require('express');
-const router =  express.Router();
+const role = require('../controller/role.js');
+const express = require('express');
+const router = express.Router();
+const auth = require('../middleware/auth')
 
-// create
-router.post('/create', role.create );
-
-// update
-router.put('/update/:id', role.update); 
-
-// delete
-router.delete('/delete/:id', role.delete);
-
-// find all 
+// getAll (R)
 router.get('/getall', role.getAll);
 
-// find one by id
-router.get('/getone/:id', role.getOne);
+// create (C)
+router.post('/create', auth, role.create);
 
+// update (U)
+router.put('/update/:id', auth, role.update);
+
+// delete (D)
+router.delete('/delete/:id', auth, role.delete);
 
 module.exports = router;

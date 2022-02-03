@@ -41,6 +41,18 @@
                         >
                           Inscription
                         </h2>
+                        <p v-if="message == 'error'">
+                          <span
+                            class="fw-bold mb-2 text-uppercase text-danger"
+                            v-if="affiche == 'login'"
+                            >Login et/ou mot de passe incorrecte</span
+                          >
+                          <span
+                            class="fw-bold mb-2 text-uppercase text-danger"
+                            v-if="affiche == 'signup'"
+                            >Merci de bien vouloir renplir tous les champs</span
+                          >
+                        </p>
                         <p v-if="affiche == 'login'" class="text-white-50 mb-5">
                           Entrer votre login et votre mot de passe !
                         </p>
@@ -127,6 +139,11 @@
                           v-if="affiche == 'signup'"
                           class="form-outline form-white mb-4"
                         >
+                          <span
+                            v-if="messagePasswordEgal == true"
+                            class="fw-bold mb-2 text-uppercase text-danger"
+                            >Les mots de passes ne correspondent pas</span
+                          >
                           <input
                             type="password"
                             id="typePasswordX2"
@@ -154,6 +171,7 @@
                           v-if="affiche == 'login'"
                           class="btn btn-outline-light btn-lg px-5"
                           type="submit"
+                          @click="login"
                         >
                           Login
                         </button>
@@ -221,37 +239,53 @@
 
 <script>
 import axios from "axios";
+import User from "../models/user";
+import VueJwtDecode from "vue-jwt-decode";
 export default {
   name: "Login",
   data() {
     return {
+      user: new User("", ""),
+      loading: false,
+      message: "",
+      messagePassword: false,
+      messagePasswordEgal: false,
       role: [],
       e: true,
       affiche: "login",
       mail: "",
       password: "",
+      password2: "",
       lastName: "",
       firstName: "",
       phone: "",
+      success: "",
+      error: "",
     };
   },
   mounted() {},
-
+  computed() {
+    if (password !== null && password2 !== null) {
+      if (password !== "" && password2 !== "") {
+        if (password !== password2) {
+          this.messagePasswordEgal == true;
+        }
+      }
+    }
+  },
   methods: {
     // modification du type pour l'input "password"
     // et changement de la classe pour l'icone eye
     changer() {
       if (this.e == true) {
-        document.gephoneementById("typePasswordX").setAttribute("type", "text");
-        document
-          .gephoneementById("eye")
-          .setAttribute("class", "fa fa-eye-slash");
+        document.getElementById("typePasswordX").setAttribute("type", "text");
+        document.getElementById("eye").setAttribute("class", "fa fa-eye-slash");
         this.e = false;
       } else {
         document
-          .gephoneementById("typePasswordX")
+          .getElementById("typePasswordX")
           .setAttribute("type", "password");
-        document.gephoneementById("eye").setAttribute("class", "fa fa-eye");
+        document.getElementById("eye").setAttribute("class", "fa fa-eye");
         this.e = true;
       }
     },
@@ -260,17 +294,17 @@ export default {
     changer2() {
       if (this.e == true) {
         document
-          .gephoneementById("typePasswordX2")
+          .getElemementById("typePasswordX2")
           .setAttribute("type", "text");
         document
-          .gephoneementById("eye2")
+          .getElementById("eye2")
           .setAttribute("class", "fa fa-eye-slash");
         this.e = false;
       } else {
         document
-          .gephoneementById("typePasswordX2")
+          .getElementById("typePasswordX2")
           .setAttribute("type", "password");
-        document.gephoneementById("eye2").setAttribute("class", "fa fa-eye");
+        document.getElementById("eye2").setAttribute("class", "fa fa-eye");
         this.e = true;
       }
     },
@@ -284,15 +318,24 @@ export default {
     },
     login() {
       axios
-        .post(this.$store.state.url + "/auth/login", {
+        .post(this.$store.state.url + "/user/login", {
           mail: this.mail,
           password: this.password,
         })
         .then((res) => {
           console.log(res.data);
-          this.$router.push("/");
+          if (res.data.token) {
+            localStorage.setItem("user", JSON.stringify(res.data));
+            const user = VueJwtDecode.decode(res.data.token);
+            this.$store.state.user = user;
+            console.log(this.$store.state.user);
+            this.$store.state.login = true;
+            location.reload();
+          }
+          return res.data;
         })
         .catch((err) => {
+          this.message = "error";
           err;
         });
     },

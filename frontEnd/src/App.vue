@@ -16,6 +16,7 @@ export default {
     this.$store.dispatch("getProductsAction");
     this.$store.dispatch("getTvaAction");
     this.$store.dispatch("getCategoriesAction");
+    this.$store.dispatch("getUserInfos");
   },
 };
 </script>

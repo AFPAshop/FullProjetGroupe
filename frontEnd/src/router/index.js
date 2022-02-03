@@ -17,6 +17,8 @@ import CartDetails from '../views/CartDetails.vue'
 import SignUp from '../views/SignUp.vue'
 import ProduitCreate from '../views/admin/creationProduit.vue'
 import test from '../views/test.vue'
+import UserInfos from '../views/UserInfos.vue'
+import Roles from '../views/admin/Roles.vue'
 
 const routes = [{
     path: '/',
@@ -92,6 +94,16 @@ const routes = [{
     path: '/test',
     name: 'test',
     component: test
+  },
+  {
+    path: '/user/infos/:id',
+    name: 'UserInfos',
+    component: UserInfos
+  },
+  {
+    path: '/admin/roles',
+    name: 'Roles',
+    component: Roles
   },
 ]
 const router = createRouter({

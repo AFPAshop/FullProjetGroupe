@@ -1,7 +1,8 @@
 <template>
-    <div id="app">
-      
-     <h1>Page des comptes clients</h1> 
+    <div id="app">      
+     <h1>Page des comptes clients</h1>
+
+     
         
     </div>
 </template>

@@ -1,21 +1,18 @@
 const category = require('../controller/category.js');
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth')
 
-// create
-router.post('/create', category.create);
-
-// update
-router.put('/update/:id', category.update);
-
-// delete
-router.delete('/delete/:id', category.delete);
-
-// find all 
+// getAll (R)
 router.get('/getall', category.getAll);
 
-// find one by id
-router.get('/getone/:id', category.getOne);
+// create (C)
+router.post('/create', auth, category.create);
 
+// update (U)
+router.put('/update/:id', auth, category.update);
+
+// delete (D)
+router.delete('/delete/:id', auth, category.delete);
 
 module.exports = router;

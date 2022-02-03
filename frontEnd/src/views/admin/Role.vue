@@ -1,37 +1,35 @@
 <template>
   <div id="app">
-    <h1>Gestion TVA</h1>
+    <h1>Gestion Rôle</h1>
     <div class="container">
       <button
         type="button"
-        class="btnTva btn btn-success"
+        class="btn btn-success"
         data-toggle="modal"
-        data-target="#createTvaModal"
+        data-target="#createRoleModal"
       >
-        Créer Tva
+        Créer Role
       </button>
       <table class="table table-hover table-dark">
         <thead>
           <tr>
             <th scope="col">id</th>
             <th scope="col">Type</th>
-            <th scope="col">Taux</th>
             <th scope="col"></th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="t in this.$store.state.tva" :key="t.id">
-            <th scope="row">{{ t.id }}</th>
-            <td>{{ t.type }}</td>
-            <td>{{ t.taux }}</td>
+          <tr v-for="r in this.$store.state.role" :key="r.id">
+            <th scope="row">{{ r.id }}</th>
+            <td>{{ r.type }}</td>
             <td>
-              <button class="btn btn-success" @click="showTva(t.id)">
+              <button class="btn btn-success" @click="showRole(r.id)">
                 Modif
               </button>
             </td>
             <td>
-              <button class="btn btn-success" @click="deleteTva(t.id)">
+              <button class="btn btn-success" @click="deleteRole(r.id)">
                 Suppr.
               </button>
             </td>
@@ -42,87 +40,73 @@
     <div class="containerHide" v-if="show == true">
       <div
         class="containerHideInput"
-        v-for="t in this.$store.state.tva"
-        :key="t.id"
+        v-for="r in this.$store.state.role"
+        :key="r.id"
       >
-        <div v-if="id == t.id">
+        <div v-if="id == r.id">
           <div class="form-outline form-white mb-4">
             <input
               v-on:input="type = $event.target.value"
-              v-bind:value="t.type"
+              v-bind:value="r.type"
               type="text"
               id="typeNameX"
               class="form-control form-control-lg"
             />
-            <label class="form-label" for="typeNameX"
-              >Taux de la Tva en % (ex: 20.6%)</label
-            >
+           
           </div>
-          <div class="form-outline form-white mb-4">
-            <input
-              v-on:input="taux = $event.target.value"
-              v-bind:value="t.taux"
-              type="number"
-              id="typeTauxX"
-              class="form-control form-control-lg"
-            />
-            <label class="form-label" for="typeTauxX"
-              >Taux de la tva en chiffre (ex: 1.206)</label
-            >
-          </div>
-          <button class="btn btn-success" @click="updateTva(t.id)">
+
+          <button class="btn btn-success" @click="updateRole(r.id)">
             Update
           </button>
-          <button class="btn btn-success" @click="hideTva">Retour</button>
+          <button class="btn btn-success" @click="hideRole">Retour</button>
         </div>
       </div>
     </div>
-    <Tva />
+
+    <Role />
     <Retour />
   </div>
 </template>
 
 <script>
-import Tva from "../../components/creationTva";
+import Role from "../../components/creationRole";
 import Retour from "../../components/RetourAdmin";
 import axios from "axios";
 export default {
-  components: { Tva, Retour },
+  components: { Role, Retour },
   data() {
     return {
       show: false,
       id: 1,
       type: "",
-      taux: "",
     };
   },
   mounted() {
-    console.log(this.$store.state.tva);
+    console.log(this.$store.state.role);
   },
   methods: {
-    showTva(id) {
+    showRole(id) {
       this.show = true;
       this.id = id;
     },
-    hideTva() {
+    hideRole() {
       this.show = false;
     },
-    updateTva(id) {
+    updateRole(id) {
       axios
-        .put(this.$store.state.url + "/tva/update/" + id, {
+        .put(this.$store.state.url + "/role/update/" + id, {
           type: this.type,
-          taux: this.taux,
         })
-        .then(() => console.log("Tva modifié"))
-        .then(() => this.$store.dispatch("getTvaAction"))
+        .then(() => console.log("Rôle modifié"))
+        .then(() => this.$store.dispatch("getRolesAction"))
         .catch((err) => console.log(err));
       this.show = false;
     },
-    deleteTva(id) {
+    deleteRole(id) {
       axios
-        .delete(this.$store.state.url + "/tva/delete/" + id)
-        .then(() => console.log("Tva supprimé"))
-        .then(() => this.$store.dispatch("getTvaAction"))
+        .delete(this.$store.state.url + "/role/delete/" + id)
+        .then(() => console.log("Role supprimé"))
+        .then(() => this.$store.dispatch("getRolesAction"))
         .catch((err) => console.log(err));
     },
   },
@@ -171,9 +155,5 @@ td {
   height: 24px;
   padding: 4px;
   vertical-align: middle;
-}
-.btnTva {
-  height: 80px;
-  margin-right: 15px;
 }
 </style>

@@ -6,22 +6,22 @@
       class="input creation"
     >
       <input
-        v-model="nom_produit"
+        v-model="title"
         class="form-control form-control-lg"
         type="text"
-        name="nom_produit"
+        name="title"
         placeholder="Entrez le nom du produit à ajouter"
-        id="nom_produit"
+        id="title"
         required
       />
       <div class="select">
         <input
-          v-model="prix"
+          v-model="price"
           class="form-control form-control-lg"
           type="text"
-          name="prix"
-          id="prix"
-          placeholder="Entrez le prix"
+          name="price"
+          id="price"
+          placeholder="Entrez le price"
           required
         />
         <input
@@ -94,7 +94,7 @@
             :value="cat.id"
             description="Selectionner la catégorie du produit"
           >
-            {{ cat.nom_categorie }}
+            {{ cat.nom }}
           </option>
         </select>
       </div>
@@ -116,9 +116,9 @@ export default {
   components: { Retour },
   data() {
     return {
-      nom_produit: "",
+      title: "",
       image: "",
-      prix: "",
+      price: "",
       stock: "",
       dlc: "",
       id_TVA: "",
@@ -139,8 +139,8 @@ export default {
     async insererProduit() {
       const formData = new FormData();
       formData.append("file", this.selectedFile);
-      formData.set("nom_produit", this.nom_produit);
-      formData.set("prix", this.prix);
+      formData.set("title", this.title);
+      formData.set("price", this.price);
       formData.set("stock", this.stock);
       formData.set("dlc", this.dlc);
       formData.set("id_TVA", this.id_TVA);
@@ -149,6 +149,13 @@ export default {
       try {
         await axios.post(this.$store.state.url + "/product/create", formData);
         this.message = "Uploaded!!";
+        this.selectedFile = "";
+        this.title = "";
+        this.price = "";
+        this.stock = "";
+        this.dlc = "";
+        this.id_TVA = "";
+        this.id_CATEGORIE = "";
       } catch (err) {
         console.log(err);
         this.message = err.response.data.error;

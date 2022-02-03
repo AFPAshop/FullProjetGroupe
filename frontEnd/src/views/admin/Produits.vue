@@ -36,7 +36,7 @@
           <td>
             <img
               style="height: 50px; width: 50px"
-              :src="p.image"
+              :src="'http://localhost:5000/' + p.image"
               class="card-img-top img-fluid"
               :alt="p.title"
             />
@@ -44,9 +44,12 @@
           <td>{{ formatProduct(p.title) }}</td>
           <td>{{ formatPrice(p.price) }} €</td>
           <td>
-            <router-link :to="'/products/update/' + p.id">
-              <button class="btn btn-outline-success btn-lg px-5">Modif</button>
-            </router-link>
+            <button
+              @click="updateProduct"
+              class="btn btn-outline-success btn-lg px-5"
+            >
+              Modif
+            </button>
           </td>
           <td>
             <button
@@ -59,6 +62,118 @@
         </tr>
       </tbody>
     </table>
+    <!-- formulaire de modification du produit -->
+    <div v-if="show == true">
+      <form
+        @submit.prevent="insererProduit"
+        enctype="multipart/form-data"
+        class="input creation"
+      >
+        <input
+          v-model="title"
+          class="form-control form-control-lg"
+          type="text"
+          name="title"
+          placeholder="Entrez le nom du produit à ajouter"
+          id="title"
+          required
+        />
+        <div class="select">
+          <input
+            v-model="price"
+            class="form-control form-control-lg"
+            type="text"
+            name="price"
+            id="price"
+            placeholder="Entrez le price"
+            required
+          />
+          <input
+            v-model="stock"
+            class="form-control form-control-lg"
+            type="text"
+            name="stock"
+            placeholder="Indiquez le stock"
+            required
+          />
+        </div>
+        <input
+          type="file"
+          ref="image"
+          @change="onFileSelected"
+          class="form-control form-control-lg"
+          id="uploadImage"
+          name="myPhoto"
+        />
+        <button @click="onFileSelected" class="btn btn-success">UpLoad</button>
+
+        <img
+          class="previewImage"
+          id="uploadPreview"
+          style="width: 200px; height: 200px"
+        />
+
+        <b-form-checkbox
+          class="formCheckBox"
+          size="lg"
+          id="checkbox-1"
+          v-model="checked"
+          name="checkbox-1"
+        >
+          Ce produit à une date de limite de consommation ?
+        </b-form-checkbox>
+
+        <input
+          v-if="checked == true"
+          v-model="dlc"
+          class="form-control form-control-lg"
+          type="date"
+          placeholder="Validité du produit"
+          name="dlc"
+          id="dlc"
+        />
+        <div class="select">
+          <select
+            v-model="id_TVA"
+            class="form-control form-control-lg"
+            name="tva"
+            placeholder="Indiquez le taux de TVA"
+            id="id_TVA"
+          >
+            <option value="">Select Taux TVA</option>
+            <option
+              v-for="t in this.$store.state.tva"
+              :key="t.id"
+              :value="t.id"
+            >
+              {{ t.type }}
+            </option>
+          </select>
+          <select
+            class="form-control form-control-lg"
+            v-model="id_CATEGORIE"
+            name="categorie"
+            id="id_CATEGORIE"
+          >
+            <option value="">Select Catégorie</option>
+            <option
+              v-for="cat in this.$store.state.categories"
+              :key="cat.id"
+              :value="cat.id"
+              description="Selectionner la catégorie du produit"
+            >
+              {{ cat.nom }}
+            </option>
+          </select>
+        </div>
+        <button
+          class="inscription btn btn-outline-dark btn-lg px-5"
+          type="submit"
+        >
+          Création Produit
+        </button>
+      </form>
+    </div>
     <Retour />
   </div>
 </template>
@@ -72,6 +187,7 @@ export default {
     return {
       searchProduct: "",
       tva: [],
+      show: false,
     };
   },
   computed: {
@@ -105,6 +221,10 @@ export default {
         .post(this.$store.state.url + "/product/delete/" + id)
         .then()
         .catch();
+    },
+    updateProduct(id) {
+      this.show = true;
+      this.id = id;
     },
   },
 };

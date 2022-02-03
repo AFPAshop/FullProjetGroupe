@@ -4,7 +4,6 @@ dotenv.config();
 
 const conn = require("../dbService");
 const connection = conn.connection;
-
 const bcrypt = require('bcrypt');
 
 class User {
@@ -67,18 +66,18 @@ class User {
         }
     }
 
-    async getOneById(id) {
+    async getOneByMail(mail) {
         try {
             const response = await new Promise((resolve, reject) => {
-                const query = "SELECT nom_utilisateur FROM utilisateur WHERE id = ?;";
-
-                connection.query(query, [id], (err, results) => {
+                const query = "SELECT * FROM utilisateur WHERE mail = ?";
+                connection.query(query, [mail], (err, results) => {
                     if (err) reject(new Error(err.message));
-                    resolve();
+                    resolve(results);
                 })
             });
-
+            console.log(response)
             return response;
+
         } catch (error) {
             console.log(error);
         }

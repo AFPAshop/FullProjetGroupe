@@ -2,20 +2,19 @@ const commande = require('../controller/commande.js');
 const express = require('express');
 const router = express.Router();
 
-// create
-router.post('/create', commande.create);
-
-// update
-router.put('/update/:id', commande.update);
-
-// delete
-router.delete('/delete/:id', commande.delete);
-
-// find all 
+// getAll (R)
 router.get('/getall', commande.getAll);
 
-// find one by id
+// getOne (R)
 router.get('/getone/:id', commande.getOne);
 
+// create (C)
+router.post('/create', commande.create);
+
+// update (U)
+router.put('/update/:id', commande.update);
+
+// delete (D)
+router.delete('/delete/:id', commande.delete);
 
 module.exports = router;

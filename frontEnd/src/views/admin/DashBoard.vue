@@ -29,6 +29,10 @@
             </button>
           </router-link>
 
+          <router-link to="/admin/roles">
+            <button class="btn btn-outline-success btn-lg px-5">Roles</button>
+          </router-link>
+
           <router-link to="/admin/compteClient">
             <button class="btn btn-outline-success btn-lg px-5">
               Compte client
@@ -45,28 +49,11 @@
             <div class="row">
               <div class="col">
                 <h3>Stocks Disponnible</h3>
-                <column-chart
-                  :data="[
-                    ['Pantalon', 32],
-                    ['T-Shirt', 46],
-                    ['Short', 8],
-                    ['Chemise', 36],
-                    ['Casquette', 30],
-                  ]"
-                  label="Stock"
-                ></column-chart>
+                <column-chart :data="chartDataHomme"></column-chart>
               </div>
               <div class="col">
                 <h3>Ventes par produit</h3>
-                <pie-chart
-                  :data="[
-                    ['Pantalon', 150],
-                    ['T-Shirt', 180],
-                    ['Short', 256],
-                    ['Chemise', 45],
-                    ['Casquette', 120],
-                  ]"
-                ></pie-chart>
+                <pie-chart :data="chartDataHomme"></pie-chart>
               </div>
               <div class="row mt-5">
                 <div class="col">
@@ -146,12 +133,41 @@
 export default {
   data() {
     return {
-      chartData: {
-        "2021-05-13": 2,
-        "2021-05-14": 5,
-        "2021-05-15": 4,
-      },
+      chartDataHomme: [],
+      chartDataFemme: [],
+      chartDataEnfant: [],
+      choixColumn: "",
+      choixPie: "",
     };
+  },
+
+  mounted() {
+    this.$store.state.products.forEach((p) => {
+      if (p.id_CATEGORIE == 1) {
+        this.chartDataHomme.push([p.title, p.stock]);
+      } else if (p.id_CATEGORIE == 2) {
+        this.chartDataFemme.push([p.title, p.stock]);
+      } else {
+        this.chartDataEnfant.push([p.title, p.stock]);
+      }
+    });
+    console.log(this.chartDataHomme);
+    console.log(this.chartDataFemme);
+    console.log(this.chartDataEnfant);
+  },
+  computed() {},
+  methods: {
+    dataHomme() {
+      document.getElementById("column").setAttribute(":data", "chartDataHomme");
+    },
+    dataFemme() {
+      document.getElementById("column").setAttribute(":data", "chartDataFemme");
+    },
+    dataEnfant() {
+      document
+        .getElementById("column")
+        .setAttribute(":data", "chartDataEnfant");
+    },
   },
 };
 </script>

@@ -1,13 +1,19 @@
 <template>
   <header class="py-3">
-    <div class="container-md d-flex justify-content-between align-items-center">
+    <div
+      v-if="this.$store.state.user.userRole != 1"
+      class="container-md d-flex justify-content-between align-items-center"
+    >
       <router-link to="/">
         <h2 class="text-white">{{ nom }}</h2>
       </router-link>
-      <ul class="nav justify-content-center">
+      <ul
+        v-if="this.$store.state.user.userRole != 1"
+        class="nav justify-content-center"
+      >
         <li v-for="c in evenCategory" :key="c.id" class="nav-item">
           <a style="color: azure" class="nav-link active" href="#">{{
-            c.nom_categorie
+            c.nom
           }}</a>
         </li>
         <!-- <li class="nav-item" v-if="Role == 'admin'">
@@ -18,7 +24,11 @@
           </router-link>
         </li> -->
       </ul>
-      <div>
+      <h2 v-if="this.$store.state.user.userRole == 2" class="text-white">
+        Bonjour {{ this.$store.state.user.userfirstName }}
+        {{ this.$store.state.user.userlastName }}
+      </h2>
+      <div v-if="this.$store.state.user.userRole == 2">
         <router-link to="/cartDetails" class="text-decoration-none">
           <h2 class="text-white cursor">
             <i style="color: #198754" class="fas fa-shopping-cart mx-1"></i>
@@ -26,8 +36,11 @@
           </h2>
         </router-link>
       </div>
-      <div>
-        <router-link to="/admin/" class="text-decoration-none">
+      <div v-if="this.$store.state.user.userRole == 2">
+        <router-link
+          :to="'/user/infos/' + this.$store.state.user.userId"
+          class="text-decoration-none"
+        >
           <h2 class="text-white cursor">
             <i style="color: #198754" class="fas fa-user"></i>
           </h2>
@@ -38,18 +51,31 @@
         class="btn btn-success"
         data-toggle="modal"
         data-target="#loginModal"
+        v-if="this.$store.state.login == false"
       >
         Login
       </button>
-      <!-- <button        
+      <button
         type="button"
         class="btn btn-success"
-        data-toggle="modal"
-        data-target="#exampleModal"
+        @click="logout"
+        v-if="this.$store.state.login == true"
       >
         Logout
-      </button> -->
+      </button>
       <Login />
+    </div>
+    <div
+      v-if="this.$store.state.user.userRole == 1"
+      class="container-md d-flex justify-content-between align-items-center"
+    >
+      <router-link to="/admin/">
+        <h2 class="text-white">{{ nom }}</h2>
+      </router-link>
+      <h2 class="text-white">Bonjour Administrateur</h2>
+      <button type="button" class="btn btn-success" @click="logout">
+        Logout
+      </button>
     </div>
   </header>
 </template>
@@ -71,6 +97,9 @@ export default {
         this.nom = e.name;
       });
     });
+    if (this.$store.state.user.userRole == 1) {
+      this.$router.push("/admin/");
+    }
   },
   computed: {
     evenCategory() {
@@ -79,7 +108,14 @@ export default {
       );
     },
   },
-  methods: {},
+  methods: {
+    logout() {
+      localStorage.removeItem("user");
+      this.$store.state.user = [];
+      this.$store.state.login = false;
+      this.$router.push("/");
+    },
+  },
 };
 </script>
 

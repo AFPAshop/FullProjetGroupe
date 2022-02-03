@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5">
         <!-- Filter by categories -->
-        <select
+        <!-- <select
           class="form-select py-2 shadow-sm text-capitalize mb-4"
           v-model="filterByCategory"
         >
@@ -13,11 +13,11 @@
             v-for="product in eliminateDuplicatedCategories(
               $store.state.products
             )"
-            :key="product.id"
+            :key="product.id_CATEGORIE"
           >
             {{ product }}
           </option>
-        </select>
+        </select> -->
         <!-- Sort by prices -->
         <select
           class="form-select py-2 shadow-sm mb-4"
@@ -29,7 +29,7 @@
           <option value="decreasingOrder">Ordre Décroissant</option>
         </select>
         <!-- Sort by ratings -->
-        <select
+        <!-- <select
           class="form-select py-2 shadow-sm mb-4"
           v-model="sortByRating"
           @change="sortProductsByRating($store.state.products)"
@@ -37,7 +37,7 @@
           <option value="" disabled>Trier par Note</option>
           <option value="increasingOrder">Ordre Croissant</option>
           <option value="decreasingOrder">Ordre Décroissant</option>
-        </select>
+        </select> -->
       </div>
       <div class="col-xl-10 col-lg-9 col-md-8 col-sm-7">
         <!-- Search Products -->
@@ -69,7 +69,7 @@
           >
             <div class="card-img">
               <img
-                :src="product.image"
+                :src="'http://localhost:5000/' + product.image"
                 class="card-img-top img-fluid"
                 :alt="product.title"
               />
@@ -77,15 +77,19 @@
             <div class="card-body d-flex flex-column justify-content-between">
               <div>
                 <h4 class="card-title mb-3">
-                  {{ formatProduct(product.title) }}
+                  {{ product.title }}
                 </h4>
                 <p class="my-2">
-                  <span class="text-muted">Category: </span>
-                  <span class="text-capitalize">
-                    {{ product.category }}
+                  <span class="text-muted">Categorie: </span>
+                  <span
+                    v-for="c in this.$store.state.categories"
+                    :key="c.id"
+                    class="text-capitalize"
+                  >
+                    <span v-if="product.id_CATEGORIE == c.id">{{ c.nom }}</span>
                   </span>
                 </p>
-                <p class="my-2">
+                <!-- <p class="my-2">
                   <span class="text-muted">Notes: </span>
                   <span
                     v-if="product.rating.rate == 0"
@@ -123,12 +127,18 @@
                     ><i class="fas fa-star"></i><i class="fas fa-star"></i
                     ><i class="fas fa-star"></i>
                   </span>
-                </p>
+                </p> -->
                 <p class="my-2">
-                  <span class="text-muted">Price: </span>
-                  <span class="text-capitalize">
-                    {{ formatPrice(product.price) }}
-                    <i class="fas fa-euro-sign"></i>
+                  <span class="text-muted">Prix TTC: </span>
+                  <span
+                    v-for="t in this.$store.state.tva"
+                    :key="t.id"
+                    class="text-capitalize"
+                  >
+                    <span v-if="t.id == product.id_TVA">
+                      {{ formatPrice(product.price * t.taux) }}
+                      <i class="fas fa-euro-sign"></i>
+                    </span>
                   </span>
                 </p>
               </div>
@@ -176,14 +186,9 @@ export default {
   computed: {
     filterProducts() {
       return this.$store.state.products.filter((product) => {
-        return (
-          product.title
-            .toLowerCase()
-            .includes(this.searchProduct.toLowerCase()) &&
-          this.capitalized(product.category).includes(
-            this.capitalized(this.filterByCategory)
-          )
-        );
+        return product.title
+          .toLowerCase()
+          .includes(this.searchProduct.toLowerCase());
       });
     },
   },
@@ -222,14 +227,14 @@ export default {
       }
     },
 
-    sortProductsByRating(products) {
-      this.sortByPrice = "";
-      if (this.sortByRating == "increasingOrder") {
-        return products.sort((a, b) => a.rating.rate - b.rating.rate);
-      } else if (this.sortByRating == "decreasingOrder") {
-        return products.sort((a, b) => b.rating.rate - a.rating.rate);
-      }
-    },
+    // sortProductsByRating(products) {
+    //   this.sortByPrice = "";
+    //   if (this.sortByRating == "increasingOrder") {
+    //     return products.sort((a, b) => a.rating.rate - b.rating.rate);
+    //   } else if (this.sortByRating == "decreasingOrder") {
+    //     return products.sort((a, b) => b.rating.rate - a.rating.rate);
+    //   }
+    // },
 
     addToCart(product) {
       console.log(product);

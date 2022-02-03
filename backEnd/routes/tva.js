@@ -1,20 +1,18 @@
 const tva = require('../controller/tva.js');
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
 
-// create
-router.post('/create', tva.create);
-
-// update
-router.put('/update/:id', tva.update);
-
-// delete
-router.delete('/delete/:id', tva.delete);
-
-// find all 
+// getAll (R)
 router.get('/getall', tva.getAll);
 
-// find one by id
-router.get('/getone/:id', tva.getOne);
+// create (C)
+router.post('/create', auth, tva.create);
+
+// update (U)
+router.put('/update/:id', auth, tva.update);
+
+// delete (D)
+router.delete('/delete/:id', auth, tva.delete);
 
 module.exports = router;
