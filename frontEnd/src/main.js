@@ -19,7 +19,7 @@ const app = createApp(App);
 
 app.use(store).use(router).use(BootstrapVue3).use(VueChartkick).use(VueGoogleMaps, {
     load: {
-        key: 'AIzaSyBWJt3ToxBWZvGiSyhfxSoltr_Mny09-Fs',
+        key: '',
         libraries: "places",
     },
 }).mount('#app')
