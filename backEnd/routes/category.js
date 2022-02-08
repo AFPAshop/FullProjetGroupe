@@ -7,12 +7,12 @@ const auth = require('../middleware/auth')
 router.get('/getall', category.getAll);
 
 // create (C)
-router.post('/create', auth, category.create);
+router.post('/create', category.create);
 
 // update (U)
 router.put('/update/:id', auth, category.update);
 
 // delete (D)
-router.delete('/delete/:id', auth, category.delete);
+router.delete('/delete/:id', category.delete);
 
 module.exports = router;

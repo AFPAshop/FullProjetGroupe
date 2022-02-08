@@ -34,6 +34,8 @@ export default createStore({
     url: 'http://localhost:5000/api',
     login: false,
     user: [],
+    conditionAffichageProduits: null,
+    catProduct: '',
   },
   mutations: {
     getProducts(state, products) {
@@ -48,6 +50,9 @@ export default createStore({
     getInfos(state, user) {
       state.user = user
     },
+    getPH(state, PH) {
+      state.conditionAffichageProduits = PH
+    }
   },
   actions: {
     getTvaAction({
@@ -88,10 +93,25 @@ export default createStore({
         console.log(infoUser);
         this.state.login = true;
       }
-    }
-
-
+    },
+    getProduitsHomme({
+      commit
+    }) {
+      const PH = 1
+      commit('getPH', PH)
+    },
+    getProduitsFemme({
+      commit
+    }) {
+      const PH = 2
+      commit('getPH', PH)
+    },
+    getProduitsEnfant({
+      commit
+    }) {
+      const PH = 3
+      commit('getPH', PH)
+    },
   },
-
   modules: {}
 })

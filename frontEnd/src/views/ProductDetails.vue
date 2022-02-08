@@ -4,24 +4,16 @@
       <div v-for="product in $store.state.products" :key="product.id">
         <div v-if="product.id == $route.params.id">
           <div class="row">
-            <div
-              class="
-                col-md-5 col-sm-6
-                product-img
-                border border-1 border-secondary
-                bg-white
-                rounded
-              "
-            >
+            <div class="col-md-6 col-sm-6 product-img bg-white rounded">
               <img
-                :src="product.image"
-                :alt="product.title"
+                :src="'http://localhost:5000/' + product.image"
                 class="img-fluid"
+                :alt="product.title"
               />
             </div>
             <div
               class="
-                col-md-7 col-sm-6
+                col-md-6 col-sm-6
                 fs-5
                 d-flex
                 flex-column
@@ -34,47 +26,46 @@
               <div class="mt-4 mt-md-0">
                 <h2 class="mb-4">{{ product.title }}</h2>
                 <p class="my-2">
-                  Category:
-                  <span class="text-capitalize">{{ product.category }}</span>
-                </p>
-                <p class="my-2">
-                  Rating:
+                  <span class="text-muted">Categorie : </span>
                   <span
-                    class="rating shadow-sm"
-                    :class="{
-                      highRating: product.rating.rate <= 5,
-                      avgRating: product.rating.rate < 4,
-                      lowRating: product.rating.rate < 3,
-                    }"
+                    v-for="c in this.$store.state.categories"
+                    :key="c.id"
+                    class="text-capitalize"
                   >
-                    {{ formatRating(product.rating.rate) }}
+                    <span v-if="product.id_CATEGORIE == c.id">{{ c.nom }}</span>
                   </span>
                 </p>
                 <p class="my-2">
-                  Price:
-                  <span class="text-capitalize">
-                    <i class="fas fa-dollar-sign"></i>
-                    {{ formatPrice(product.price) }}
+                  <span class="text-muted">Prix TTC : </span>
+                  <span
+                    v-for="t in this.$store.state.tva"
+                    :key="t.id"
+                    class="text-capitalize"
+                  >
+                    <span v-if="t.id == product.id_TVA">
+                      {{ formatPrice(product.price * t.taux) }}
+                      <i class="fas fa-euro-sign"></i>
+                    </span>
                   </span>
                 </p>
                 <p class="mt-3 fs-6">
                   <strong class="fs-4">Description</strong>
                   <br />
-                  {{ formatDescription(product.description) }}
+                  En cours
                 </p>
                 <button
                   class="btn btn-success mt-2 btn-sm"
                   @click="addToCart(product)"
                 >
                   <i class="fas fa-cart-plus mx-1"></i>
-                  Add to Cart
+                  Ajouter au panier
                 </button>
               </div>
               <div class="d-inline-block mt-4">
                 <router-link to="/" class="text-decoration-none">
                   <a href="#" class="btn btn-dark d-flex align-items-center">
                     <i class="fas fa-arrow-left mx-1"></i>
-                    Back to Main Page
+                    Retour aux produits
                   </a>
                 </router-link>
               </div>
@@ -103,6 +94,16 @@ export default {
       return product.charAt(0).toUpperCase() + product.slice(1);
     },
     addToCart(product) {
+      console.log(product);
+      console.log(this.$store.state.cart);
+      for (let i = 0; i < this.$store.state.cart.length; i++) {
+        if (this.$store.state.cart[i].id == product.id) {
+          this.$store.state.items++;
+          return this.$store.state.cart[i].quantity++;
+        }
+      }
+      product.quantity = 1;
+      this.$store.state.items++;
       return this.$store.state.cart.push(product);
     },
   },
@@ -112,13 +113,11 @@ export default {
 <style lang="scss" scoped>
 .row {
   .product-img {
-    height: 60vh;
     padding: 0;
     margin: 0;
     img {
-      height: 100%;
-      width: 100%;
-      transform: scale(0.75, 0.85);
+      height: 300px;
+      width: 300px;
       @media (max-width: 30rem) {
         transform: scale(0.9);
       }

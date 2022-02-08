@@ -1,83 +1,91 @@
 <template>
-  <header class="py-3">
-    <div
-      v-if="this.$store.state.user.userRole != 1"
-      class="container-md d-flex justify-content-between align-items-center"
-    >
-      <router-link to="/">
-        <h2 class="text-white">{{ nom }}</h2>
-      </router-link>
-      <ul
-        v-if="this.$store.state.user.userRole != 1"
-        class="nav justify-content-center"
-      >
-        <li v-for="c in evenCategory" :key="c.id" class="nav-item">
-          <a style="color: azure" class="nav-link active" href="#">{{
-            c.nom
-          }}</a>
-        </li>
-        <!-- <li class="nav-item" v-if="Role == 'admin'">
-          <router-link to="/admin">
-            <a style="color: azure" class="nav-link active" href="#"
-              >Home Admin</a
+  <div>
+    <nav class="headerNav navbar navbar-expand-lg navbar-dark">
+      <div class="container-fluid">
+        <router-link class="navbar-brand" to="/">
+          <h2 class="text-white">{{ nom }}</h2>
+        </router-link>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul v-if="this.$store.state.user.userRole != 1" class="navbar-nav">
+            <li class="nav-item">
+              <button
+                class="buttoncat nav-link active ms-5"
+                aria-current="page"
+                @click="affichProduits"
+              >
+                Produits
+              </button>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav mx-auto">
+            <li class="nav-item">
+              <h2
+                v-if="this.$store.state.user.userRole == 2"
+                class="text-white"
+              >
+                Bonjour {{ this.$store.state.user.userfirstName }}
+                {{ this.$store.state.user.userlastName }}
+              </h2>
+              <h2
+                v-if="this.$store.state.user.userRole == 1"
+                class="text-white"
+              >
+                Bonjour Administrateur
+                {{ this.$store.state.user.userfirstName }}
+              </h2>
+            </li>
+          </ul>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="nav-item me-5">
+            <div v-if="this.$store.state.user.userRole == 2">
+              <router-link to="/cartDetails" class="text-decoration-none">
+                <h2 class="text-white cursor">
+                  <i
+                    style="color: #198754"
+                    class="fas fa-shopping-cart mx-1"
+                  ></i>
+                  {{ this.$store.state.items }}
+                </h2>
+              </router-link>
+            </div>
+          </li>
+          <li class="nav-item me-5">
+            <div v-if="this.$store.state.user.userRole == 2">
+              <router-link
+                :to="'/user/infos/' + this.$store.state.user.userId"
+                class="text-decoration-none"
+              >
+                <h2 class="text-white cursor">
+                  <i style="color: #198754" class="fas fa-user"></i>
+                </h2>
+              </router-link>
+            </div>
+          </li>
+          <li class="nav-item me-5">
+            <button
+              type="button"
+              class="btn btn-success"
+              data-toggle="modal"
+              data-target="#loginModal"
+              v-if="this.$store.state.login == false"
             >
-          </router-link>
-        </li> -->
-      </ul>
-      <h2 v-if="this.$store.state.user.userRole == 2" class="text-white">
-        Bonjour {{ this.$store.state.user.userfirstName }}
-        {{ this.$store.state.user.userlastName }}
-      </h2>
-      <div v-if="this.$store.state.user.userRole == 2">
-        <router-link to="/cartDetails" class="text-decoration-none">
-          <h2 class="text-white cursor">
-            <i style="color: #198754" class="fas fa-shopping-cart mx-1"></i>
-            {{ this.$store.state.items }}
-          </h2>
-        </router-link>
+              Login
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              @click="logout"
+              v-if="this.$store.state.login == true"
+            >
+              Logout
+            </button>
+          </li>
+        </ul>
       </div>
-      <div v-if="this.$store.state.user.userRole == 2">
-        <router-link
-          :to="'/user/infos/' + this.$store.state.user.userId"
-          class="text-decoration-none"
-        >
-          <h2 class="text-white cursor">
-            <i style="color: #198754" class="fas fa-user"></i>
-          </h2>
-        </router-link>
-      </div>
-      <button
-        type="button"
-        class="btn btn-success"
-        data-toggle="modal"
-        data-target="#loginModal"
-        v-if="this.$store.state.login == false"
-      >
-        Login
-      </button>
-      <button
-        type="button"
-        class="btn btn-success"
-        @click="logout"
-        v-if="this.$store.state.login == true"
-      >
-        Logout
-      </button>
-      <Login />
-    </div>
-    <div
-      v-if="this.$store.state.user.userRole == 1"
-      class="container-md d-flex justify-content-between align-items-center"
-    >
-      <router-link to="/admin/">
-        <h2 class="text-white">{{ nom }}</h2>
-      </router-link>
-      <h2 class="text-white">Bonjour Administrateur</h2>
-      <button type="button" class="btn btn-success" @click="logout">
-        Logout
-      </button>
-    </div>
-  </header>
+    </nav>
+    <Login />
+  </div>
 </template>
 
 <script>
@@ -97,9 +105,6 @@ export default {
         this.nom = e.name;
       });
     });
-    if (this.$store.state.user.userRole == 1) {
-      this.$router.push("/admin/");
-    }
   },
   computed: {
     evenCategory() {
@@ -114,13 +119,21 @@ export default {
       this.$store.state.user = [];
       this.$store.state.login = false;
       this.$router.push("/");
+      this.$store.state.conditionAffichageProduits == null;
+    },
+    changeCat(id) {
+      this.$store.state.catProduct = id;
+      console.log(this.$store.state.catProduct);
+    },
+    affichProduits() {
+      this.$store.state.conditionAffichageProduits = 1;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-header {
+.headerNav {
   background-color: #08183f;
   a {
     text-decoration: none;
@@ -131,5 +144,14 @@ header {
       cursor: pointer;
     }
   }
+}
+.buttoncat {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 15px;
+  font: inherit;
+  outline: inherit;
+  font-size: 1.5em;
 }
 </style>

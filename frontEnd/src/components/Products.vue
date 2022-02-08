@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5">
         <!-- Filter by categories -->
-        <!-- <select
+        <select
           class="form-select py-2 shadow-sm text-capitalize mb-4"
           v-model="filterByCategory"
         >
@@ -13,11 +13,17 @@
             v-for="product in eliminateDuplicatedCategories(
               $store.state.products
             )"
-            :key="product.id_CATEGORIE"
+            :key="product"
           >
-            {{ product }}
+            <span
+              v-for="c in this.$store.state.categories"
+              :key="c.id"
+              class="text-capitalize"
+            >
+              <span v-if="product == c.id">{{ c.nom }}</span>
+            </span>
           </option>
-        </select> -->
+        </select>
         <!-- Sort by prices -->
         <select
           class="form-select py-2 shadow-sm mb-4"
@@ -80,7 +86,7 @@
                   {{ product.title }}
                 </h4>
                 <p class="my-2">
-                  <span class="text-muted">Categorie: </span>
+                  <span class="text-muted">Categorie : </span>
                   <span
                     v-for="c in this.$store.state.categories"
                     :key="c.id"
@@ -89,47 +95,8 @@
                     <span v-if="product.id_CATEGORIE == c.id">{{ c.nom }}</span>
                   </span>
                 </p>
-                <!-- <p class="my-2">
-                  <span class="text-muted">Notes: </span>
-                  <span
-                    v-if="product.rating.rate == 0"
-                    class="rating shadow-sm"
-                  >
-                  </span>
-                  <span
-                    v-else-if="product.rating.rate <= 1"
-                    class="rating shadow-sm"
-                  >
-                    <i class="fas fa-star"></i>
-                  </span>
-                  <span
-                    v-else-if="product.rating.rate <= 2"
-                    class="rating shadow-sm"
-                  >
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                  </span>
-                  <span
-                    v-else-if="product.rating.rate <= 3"
-                    class="rating shadow-sm"
-                  >
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i
-                    ><i class="fas fa-star"></i>
-                  </span>
-                  <span
-                    v-else-if="product.rating.rate <= 4"
-                    class="rating shadow-sm"
-                  >
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i
-                    ><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                  </span>
-                  <span v-else class="rating shadow-sm">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i
-                    ><i class="fas fa-star"></i><i class="fas fa-star"></i
-                    ><i class="fas fa-star"></i>
-                  </span>
-                </p> -->
                 <p class="my-2">
-                  <span class="text-muted">Prix TTC: </span>
+                  <span class="text-muted">Prix TTC : </span>
                   <span
                     v-for="t in this.$store.state.tva"
                     :key="t.id"
@@ -186,9 +153,13 @@ export default {
   computed: {
     filterProducts() {
       return this.$store.state.products.filter((product) => {
-        return product.title
-          .toLowerCase()
-          .includes(this.searchProduct.toLowerCase());
+        return (
+          (product.title
+            .toLowerCase()
+            .includes(this.searchProduct.toLowerCase()) &&
+            product.id_CATEGORIE == this.filterByCategory) ||
+          this.filterByCategory == ""
+        );
       });
     },
   },
@@ -209,8 +180,9 @@ export default {
     eliminateDuplicatedCategories(products) {
       let arr = [];
       products.forEach((product) => {
-        arr.push(product.category);
+        arr.push(product.id_CATEGORIE);
       });
+      console.log(arr);
       return [...new Set(arr)];
     },
 
@@ -261,6 +233,14 @@ export default {
         height: "1.6em",
         delay: el.dataset.index * 0.15,
         onComplete: done,
+      });
+    },
+
+    categoryName(data) {
+      this.$store.state.categories.forEach((c) => {
+        if ((c.id = data)) {
+          return c.nom;
+        }
       });
     },
 

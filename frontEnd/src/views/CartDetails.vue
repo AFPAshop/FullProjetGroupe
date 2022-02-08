@@ -47,9 +47,9 @@
                 <td>{{ index + 1 }}</td>
                 <td>
                   <img
-                    :src="product.image"
+                    :src="'http://localhost:5000/' + product.image"
+                    class="card-img-top img-fluid"
                     :alt="product.title"
-                    class="img-fluid"
                   />
                 </td>
                 <td>{{ product.title }}</td>
@@ -89,7 +89,7 @@
                 class="btn btn-dark d-flex align-items-center"
               >
                 <i class="fas fa-arrow-left mx-1"></i>
-                Back to Main Page
+                Continuer les achats
               </a>
             </router-link>
           </div>

@@ -49,11 +49,11 @@
             <div class="row">
               <div class="col">
                 <h3>Stocks Disponnible</h3>
-                <column-chart :data="chartDataHomme"></column-chart>
+                <column-chart :data="chartData"></column-chart>
               </div>
               <div class="col">
                 <h3>Ventes par produit</h3>
-                <pie-chart :data="chartDataHomme"></pie-chart>
+                <pie-chart :data="chartData"></pie-chart>
               </div>
               <div class="row mt-5">
                 <div class="col">
@@ -133,6 +133,7 @@
 export default {
   data() {
     return {
+      chartData: [],
       chartDataHomme: [],
       chartDataFemme: [],
       chartDataEnfant: [],
@@ -141,22 +142,58 @@ export default {
     };
   },
 
-  mounted() {
+  beforeMount() {
     this.$store.state.products.forEach((p) => {
-      if (p.id_CATEGORIE == 1) {
-        this.chartDataHomme.push([p.title, p.stock]);
-      } else if (p.id_CATEGORIE == 2) {
-        this.chartDataFemme.push([p.title, p.stock]);
-      } else {
-        this.chartDataEnfant.push([p.title, p.stock]);
-      }
+      this.chartData.push([p.title, p.stock]);
     });
-    console.log(this.chartDataHomme);
-    console.log(this.chartDataFemme);
-    console.log(this.chartDataEnfant);
   },
-  computed() {},
+
+  mounted() {
+    // this.$store.state.products.forEach((p) => {
+    //   if (p.id_CATEGORIE == 1) {
+    //     this.chartDataHomme.push([p.title, p.stock]);
+    //   } else if (p.id_CATEGORIE == 2) {
+    //     this.chartDataFemme.push([p.title, p.stock]);
+    //   } else {
+    //     this.chartDataEnfant.push([p.title, p.stock]);
+    //   }
+    // });
+    //   this.$store.state.products.forEach((p) => {
+    //     this.chartData.push([p.title, p.stock]);
+    //   });
+    //   console.log("non Async");
+    //   if ((this.$store.state.user.role = !1)) {
+    //     this.$router.push("/");
+    //   }
+  },
+
+  async mounted() {
+    // try {
+    //   this.$store.state.products.forEach((p) => {
+    //     this.chartData.push([p.title, p.stock]);
+    //   });
+    //   console.log(this.chartData);
+    // } catch (e) {
+    //   console.error(e);
+    // }
+  },
+
+  created() {
+    if (this.$store.state.user.userRole !== 1) {
+      this.$router.push("/");
+    }
+  },
+
+  computed: {},
   methods: {
+    insertDataColumn() {
+      const chartData = [];
+      this.$store.state.products.forEach((p) => {
+        chartData.push([p.title, p.stock]);
+      });
+      console.log(chartData);
+      return chartData;
+    },
     dataHomme() {
       document.getElementById("column").setAttribute(":data", "chartDataHomme");
     },
